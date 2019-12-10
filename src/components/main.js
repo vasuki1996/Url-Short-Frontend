@@ -16,15 +16,18 @@ class MainArea extends React.Component {
     handleSubmit(event) {
         //alert('A name was submitted: ' + this.state.value);
         event.preventDefault();
-        fetch("https://radiant-spire-23461.herokuapp.com/shorten", {
-            method: "POST",
-            body: JSON.stringify({
-                url: this.state.short_url.trim()
-            })
-        }).then(res => res.json())
+        console.log(this.state.short_url);
+        var body = {
+            url: this.state.short_url
+        };
+        console.log(body);
+        fetch(`https://stormy-thicket-79739.herokuapp.com/shorten?url=${this.state.short_url}`,{
+            method:"POST"
+        })
+            .then(res => res.json())
             .then(data => {
                 console.log(data);
-                var _buildUrl = window.location.origin + '/' + data.hash;
+                var _buildUrl = 'https://stormy-thicket-79739.herokuapp.com/' + data.hash;
                 this.setState({ _buildUrl: _buildUrl });
                 document.getElementById("final").innerHTML = `<a href="${this.state._buildUrl}">${this.state._buildUrl}</a>`;
                 console.log("States ", this.state);
