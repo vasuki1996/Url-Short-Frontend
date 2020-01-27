@@ -30,7 +30,7 @@ pipeline {
                     sh 'tar -czvf build_$timestamp.tar.gz ./build/*'
                     echo "END - TARBALL"
                     sshPut remote: remote, from: 'build_'+timestamp+'.tar.gz', into: '.'
-                    sshCommand remote: remote, command: 'tar -xzvf build_'+timestamp+'.tar.gz -C /var/www/html/'
+                    sshCommand remote: remote, command: 'tar -xzvf build_'+timestamp+'.tar.gz -C /var/www/html/ && cp -R /var/www/html/build/* /var/www/html/ && rm -rf build'
                 }
             }
         }
