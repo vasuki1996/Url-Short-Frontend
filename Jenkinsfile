@@ -8,7 +8,7 @@ pipeline {
    stages {
       stage('Checkout From SCM'){
           steps{
-              checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/*']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-access-token', url: 'https://github.com/vasuki1996/Url-Short-Frontend.git']]]
+              checkout changelog: true, poll: true, scm: [$class: 'GitSCM', branches: [[name: '*/*']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-access-token', url: 'https://github.com/vasuki1996/Url-Short-Frontend.git']]]
           }
       }
       stage('Install Dependencies and Build'){
