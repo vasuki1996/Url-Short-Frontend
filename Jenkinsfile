@@ -49,7 +49,6 @@ pipeline {
 
        success {
            mail to: emailRecipients,
-                from: 'jenkins-ci@geekyants.com',
                 subject: 'Build Success',
                 mimeType: 'text/html', 
                 body: '''<p>Build Success</p>
@@ -58,7 +57,6 @@ pipeline {
 
        failure {
            mail to: emailRecipients,
-                from: 'jenkins-ci@geekyants.com',
                 subject: 'Build Failure',
                 mimeType: 'text/html', 
                 body: '''<p>Build Failed</p>
