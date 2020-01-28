@@ -10,6 +10,10 @@ pipeline {
        emailRecipients = 'vasukiv@geekyants.com'
    }
 
+   triggers {
+        pollSCM 'H/2 * * * *'
+   }   
+
    stages {
       stage('Checkout From SCM'){
           steps{
