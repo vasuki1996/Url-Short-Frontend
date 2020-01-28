@@ -49,18 +49,24 @@ pipeline {
 
        success {
            mail to: emailRecipients,
-                subject: 'Build Success',
+                from: 'jenkins-ci@geekyants.com'
+                subject: env.PROJECT_NAME + ' Build Success',
                 mimeType: 'text/html', 
-                body: '''<p>Build Success</p>
-                        <p>Your build is live <a href="http://$deployHost">here</a>.</p>'''
+                body: '''<h2>Build Success</h2>
+                        <p>Your build is live <a href="http://'''+deployHost+''''">here</a>.</p>
+                        <p>Build Number : ''' + env.BUILD_NUMBER + 
+                        ''' <p>Build url: ''' + env.BUILD_URL
        }
 
        failure {
            mail to: emailRecipients,
-                subject: 'Build Failure',
+                from: 'jenkins-ci@geekyants.com'
+                subject: env.PROJECT_NAME + ' Build Failure',
                 mimeType: 'text/html', 
-                body: '''<p>Build Failed</p>
-                        <p>Your previous build might be live <a href="http://$deployHost">here</a>.</p>'''
+                body: '''<h2>Build Failed</h2>
+                        <p>Your previous build might be live <a href="http://'''+deployHost+''''">here</a>.</p>
+                        <p>Build Number : ''' + env.BUILD_NUMBER + 
+                        ''' <p>Build url: ''' + env.BUILD_URL
        }
    }
 }
