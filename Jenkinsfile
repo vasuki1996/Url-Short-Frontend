@@ -50,7 +50,7 @@ pipeline {
        success {
            mail to: emailRecipients,
                 from: 'jenkins-ci@geekyants.com',
-                subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!',
+                subject: env.PROJECT_NAME+' - Build # '+env.BUILD_NUMBER+' - '+env.BUILD_STATUS+'!',
                 mimeType: 'text/html', 
                 body: '''<h2>Build Success</h2>
                         <p>Your build is live <a href="http://'''+deployHost+''''">here</a>.</p>
@@ -61,7 +61,7 @@ pipeline {
        failure {
            mail to: emailRecipients,
                 from: 'jenkins-ci@geekyants.com',
-                subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!',
+                subject: env.PROJECT_NAME+' - Build # '+env.BUILD_NUMBER+' - '+env.BUILD_STATUS+'!',
                 mimeType: 'text/html', 
                 body: '''<h2>Build Failed</h2>
                         <p>Your previous build might be live <a href="http://'''+deployHost+''''">here</a>.</p>
