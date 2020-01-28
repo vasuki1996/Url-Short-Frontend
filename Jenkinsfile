@@ -18,6 +18,7 @@ pipeline {
       stage('Checkout From SCM'){
           steps{
               checkout changelog: true, poll: true, scm: [$class: 'GitSCM', branches: [[name: '*/*']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: gitToken, url: gitURL]]]
+              echo 'Pulling... ' + env.GIT_BRANCH
           }
       }
       stage('Install Dependencies and Build'){
