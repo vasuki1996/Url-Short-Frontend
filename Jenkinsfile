@@ -3,12 +3,15 @@ pipeline {
    
    environment {
        timestamp = new Date().format("yyyyMMddHHmm")
+       gitToken = 'git-access-token'
+       gitURL = 'https://github.com/vasuki1996/Url-Short-Frontend.git'
+       deployHost = "ec2-18-219-59-88.us-east-2.compute.amazonaws.com"
    }
 
    stages {
       stage('Checkout From SCM'){
           steps{
-              checkout changelog: true, poll: true, scm: [$class: 'GitSCM', branches: [[name: '*/*']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-access-token', url: 'https://github.com/vasuki1996/Url-Short-Frontend.git']]]
+              checkout changelog: true, poll: true, scm: [$class: 'GitSCM', branches: [[name: '*/*']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: gitToken, url: gitURL]]]
           }
       }
       stage('Install Dependencies and Build'){
@@ -20,8 +23,8 @@ pipeline {
         steps{
             script{
                 def remote = [:]
-                remote.name = "ec2-18-219-59-88.us-east-2.compute.amazonaws.com"
-                remote.host = "ec2-18-219-59-88.us-east-2.compute.amazonaws.com"
+                remote.name = deployHost
+                remote.host = deployHost
                 remote.allowAnyHosts = true
                 withCredentials([sshUserPrivateKey(credentialsId: 'ec2-pem', keyFileVariable: 'ec2Pem', usernameVariable: 'userName')]) {
                     remote.user = userName
