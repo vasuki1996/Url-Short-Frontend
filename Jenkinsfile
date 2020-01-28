@@ -49,7 +49,7 @@ pipeline {
 
        success {
            mail to: emailRecipients,
-                from: 'jenkins-ci@geekyants.com'
+                from: 'jenkins-ci@geekyants.com',
                 subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!',
                 mimeType: 'text/html', 
                 body: '''<h2>Build Success</h2>
@@ -60,7 +60,7 @@ pipeline {
 
        failure {
            mail to: emailRecipients,
-                from: 'jenkins-ci@geekyants.com'
+                from: 'jenkins-ci@geekyants.com',
                 subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!',
                 mimeType: 'text/html', 
                 body: '''<h2>Build Failed</h2>
