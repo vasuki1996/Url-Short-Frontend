@@ -6,6 +6,8 @@ pipeline {
        gitToken = 'git-access-token'
        gitURL = 'https://github.com/vasuki1996/Url-Short-Frontend.git'
        deployHost = "ec2-18-219-59-88.us-east-2.compute.amazonaws.com"
+
+       emailRecipients = 'vasukiv@geekyants.com'
    }
 
    stages {
@@ -33,10 +35,34 @@ pipeline {
                     sh 'tar -czvf build_$timestamp.tar.gz ./build/*'
                     echo "END - TARBALL"
                     sshPut remote: remote, from: 'build_'+timestamp+'.tar.gz', into: '.'
-                    sshCommand remote: remote, command: 'tar -xzvf build_'+timestamp+'.tar.gz -C /var/www/html/ && cp -R /var/www/html/build/* /var/www/html/ && rm -rf build'
+                    sshCommand remote: remote, command: 'tar -xzvf build_'+timestamp+'.tar.gz -C /var/www/html/ && cp -R /var/www/html/build/* /var/www/html/ && rm -rf ./build'
                 }
             }
         }
       }
+   }
+
+   post {
+       always{
+           cleanWs()
+       }
+
+       success {
+           mail to: emailRecipients,
+                from: 'jenkins-ci@geekyants.com',
+                subject: 'Build Success',
+                mimeType: 'text/html', 
+                body: '''<p>Build Success</p>
+                        <p>Your build is live <a href="http://$deployHost">here</a>.</p>'''
+       }
+
+       failure {
+           mail to: emailRecipients,
+                from: 'jenkins-ci@geekyants.com',
+                subject: 'Build Failure',
+                mimeType: 'text/html', 
+                body: '''<p>Build Failed</p>
+                        <p>Your previous build might be live <a href="http://$deployHost">here</a>.</p>'''
+       }
    }
 }
