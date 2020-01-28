@@ -61,7 +61,7 @@ pipeline {
        failure {
            mail to: emailRecipients,
                 from: 'jenkins-ci@geekyants.com',
-                subject: 'Build # '+env.BUILD_NUMBER+' - Failed!',,
+                subject: 'Build # '+env.BUILD_NUMBER+' - Failed!',
                 mimeType: 'text/html', 
                 body: '''<h2>Build Failed</h2>
                         <p>Your previous build might be live <a href="http://'''+deployHost+''''">here</a>.</p>
