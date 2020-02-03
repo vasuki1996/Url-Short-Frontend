@@ -93,7 +93,7 @@ jobs:
           name: "Pack And SCP the distribution"
           command: |
             tar -czvf build_$TIMESTAMP.tar.gz ./build/*
-            scp build_$TIMESTAMP.tar.gz ubuntu@ec2-18-219-59-88.us-east-2.compute.amazonaws.com:/home/ubuntu
+            scp -o StrictHostKeyChecking=no build_$TIMESTAMP.tar.gz ubuntu@ec2-18-219-59-88.us-east-2.compute.amazonaws.com:/home/ubuntu
 
       - save_cache:
           paths:
