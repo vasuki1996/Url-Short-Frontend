@@ -17,6 +17,9 @@ jobs:
     working_directory: ~/repo
 
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "41:c5:81:59:48:d1:c9:1d:2b:f1:ee:1f:46:5b:b3:b4"
       - checkout
       - run:
           name: Setup Environment Variables
@@ -42,7 +45,8 @@ jobs:
           name: "Pack And SCP the distribution"
           command: |
             tar -czvf build_$TIMESTAMP.tar.gz ./build/*
-            scp -i $sshKey build_$TIMESTAMP.tar.gz ubuntu@ec2-18-219-59-88.us-east-2.compute.amazonaws.com:/home/ubuntu
+            scp -o StrictHostKeyChecking=no build_$TIMESTAMP.tar.gz ubuntu@ec2-18-219-59-88.us-east-2.compute.amazonaws.com:/home/ubuntu
+            ssh ubuntu@ec2-18-219-59-88.us-east-2.compute.amazonaws.com bash -c "'tar -xzvf build_$TIMESTAMP.tar.gz -C /var/www/html/ && cp -R /var/www/html/build/* /var/www/html/ && rm -rf ./build/*'"
 
       - save_cache:
           paths:
