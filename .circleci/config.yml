@@ -1,0 +1,114 @@
+# JavaScript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  build_dev:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:lts-jessie
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - run:
+          name: Setup Environment Variables
+          command: |
+            echo 'export GIT_SHA="$(git rev-parse --short HEAD)"' >> $BASH_ENV
+            echo 'export TIMESTAMP=`date "+%Y%m%d%H%M%S"`' >> $BASH_ENV
+      # Better to create a docker image for this step
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: npm ci
+
+      - run: 
+          name: "Production Build"
+          command: |
+            npm run build
+
+      - run: 
+          name: "Pack And SCP the distribution"
+          command: |
+            tar -czvf build_$TIMESTAMP.tar.gz ./build/*
+            scp -i $sshKey build_$TIMESTAMP.tar.gz ubuntu@ec2-18-219-59-88.us-east-2.compute.amazonaws.com:/home/ubuntu
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      # run tests!
+      #- run: yarn test
+
+  build_prod:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:lts-jessie
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - run:
+          name: Setup Environment Variables
+          command: |
+            echo 'export GIT_SHA="$(git rev-parse --short HEAD)"' >> $BASH_ENV
+            echo 'export TIMESTAMP=`date "+%Y%m%d%H%M%S"`' >> $BASH_ENV
+      # Better to create a docker image for this step
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: npm ci
+
+      - run: 
+          name: "Production Build"
+          command: |
+            npm run build
+
+      - run: 
+          name: "Pack And SCP the distribution"
+          command: |
+            tar -czvf build_$TIMESTAMP.tar.gz ./build/*
+            scp -i $sshKey build_$TIMESTAMP.tar.gz ubuntu@ec2-18-219-59-88.us-east-2.compute.amazonaws.com:/home/ubuntu
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      # run tests!
+      #- run: yarn test
+
+workflows:
+  version: 2
+  full:
+    jobs:
+      - build_dev:
+          filters:
+            branches:
+              only: dev
+      - build_prod:
+          filters:
+            branches:
+              only: master
