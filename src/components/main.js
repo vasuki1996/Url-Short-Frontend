@@ -37,7 +37,7 @@ class MainArea extends React.Component {
 render(){
     return (
         <div class="container mt-5">
-            <form id="form_shorten" role="form" onSubmit={this.handleSubmit}>
+            <form id="form_shorten" onSubmit={this.handleSubmit}>
                 <div class="input-group">
                     <input value={this.state.short_url} onChange={this.handleChange} type="url" class="form-control text-url" placeholder="Enter a URL to shorten..." />
                     <span class="input-group-btn">
